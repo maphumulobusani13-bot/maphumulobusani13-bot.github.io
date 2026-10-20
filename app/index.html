@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get DRINKS</title>
+<meta name="description" content="DRINKS: ice-cold drinks right at your doorstep. Download the app.">
+<style>
+  :root { --amber: #F5A524; --night: #0F1115; --card: #181B21; --text: #F4F5F7; --muted: #A4AAB5; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--night); color: var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+  main { width: 100%; max-width: 420px; text-align: center; display: flex; flex-direction: column; gap: 16px; }
+  h1 { font-size: 44px; margin: 0; letter-spacing: -1px; }
+  p { margin: 0; color: var(--muted); line-height: 1.5; }
+  .btn { display: block; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 17px; text-decoration: none; }
+  .primary { background: var(--amber); color: #1A1204; }
+  .secondary { background: var(--card); color: var(--text); border: 1px solid #2C313A; }
+  .soon { background: var(--card); border-radius: 12px; padding: 16px; color: var(--text); }
+  small { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <svg width="120" height="120" viewBox="0 0 220 220" style="margin: 0 auto" role="img" aria-label="DRINKS app icon">
+    <rect width="220" height="220" rx="50" fill="#F5A524"/>
+    <rect x="94" y="30" width="32" height="13" rx="4" fill="#000"/>
+    <path d="M97 44 h26 v30 c0 11 25 19 25 42 v56 c0 11 -8 19 -19 19 h-38 c-11 0 -19 -8 -19 -19 v-56 c0 -23 25 -31 25 -42 z" fill="#000"/>
+    <rect x="72" y="128" width="76" height="24" fill="#F5A524"/>
+    <text x="110" y="146.5" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="17" textLength="64" lengthAdjust="spacingAndGlyphs" fill="#000">DRINKS</text>
+    <path d="M166 44 c9 13 15 21 15 29 a15 15 0 0 1 -30 0 c0 -8 6 -16 15 -29 z" fill="#fff"/>
+  </svg>
+  <h1>DRINKS</h1>
+  <p>Ice-cold drinks right at your doorstep. Order in the app, pay by card, and we deliver.</p>
+  <div id="links"></div>
+  <small>Not for sale to persons under the age of 18. Drink responsibly.</small>
+</main>
+<script>
+  // Fill these in once the app is published in each store.
+  var APP_STORE_URL = '';   // e.g. https://apps.apple.com/za/app/drinks/id0000000000
+  var PLAY_STORE_URL = '';  // https://play.google.com/store/apps/details?id=com.drinksapp.za
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/i.test(ua);
+  var mine = isIOS ? APP_STORE_URL : isAndroid ? PLAY_STORE_URL : '';
+
+  // Send phones straight to their store.
+  if (mine) window.location.replace(mine);
+
+  var html = '';
+  if (APP_STORE_URL) html += '<a class="btn ' + (isIOS ? 'primary' : 'secondary') + '" href="' + APP_STORE_URL + '">Download on the App Store</a>';
+  if (PLAY_STORE_URL) html += '<a class="btn ' + (isAndroid ? 'primary' : 'secondary') + '" href="' + PLAY_STORE_URL + '" style="margin-top:12px">Get it on Google Play</a>';
+  if (!html) html = '<div class="soon"><strong>Coming soon</strong><p style="margin-top:6px">DRINKS will be in the App Store and Google Play shortly. Check back here.</p></div>';
+  document.getElementById('links').innerHTML = html;
+</script>
+</body>
+</html>
