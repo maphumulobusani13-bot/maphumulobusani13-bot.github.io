@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Choose a new password · DRINKS</title>
+<link rel="icon" href="/favicon.png">
+<style>
+  :root { --amber: #F5A524; --night: #0F1115; --card: #181B21; --line: #2C313A; --text: #F4F5F7; --muted: #A4AAB5; --bad: #F26D6D; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--night); color: var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+  main { width: 100%; max-width: 420px; text-align: center; display: flex; flex-direction: column; gap: 16px; }
+  h1 { font-size: 30px; margin: 0; letter-spacing: -0.5px; }
+  p { margin: 0; color: var(--muted); line-height: 1.5; }
+  .btn { display: block; width: 100%; padding: 16px; border: 0; border-radius: 12px; font: inherit; font-weight: 700;
+         font-size: 17px; text-decoration: none; cursor: pointer; background: var(--amber); color: #1A1204; }
+  .btn:disabled { opacity: 0.6; }
+  input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card);
+          color: var(--text); font: inherit; font-size: 17px; }
+  label { text-align: left; font-size: 14px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+  .msg { min-height: 1.5em; }
+  .bad { color: var(--bad); }
+  small { color: var(--muted); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <svg width="88" height="88" viewBox="0 0 220 220" style="margin: 0 auto" aria-hidden="true">
+    <rect width="220" height="220" rx="50" fill="#F5A524"/>
+    <rect x="94" y="30" width="32" height="13" rx="4" fill="#000"/>
+    <path d="M97 44 h26 v30 c0 11 25 19 25 42 v56 c0 11 -8 19 -19 19 h-38 c-11 0 -19 -8 -19 -19 v-56 c0 -23 25 -31 25 -42 z" fill="#000"/>
+    <rect x="72" y="128" width="76" height="24" fill="#F5A524"/>
+    <path d="M166 44 c9 13 15 21 15 29 a15 15 0 0 1 -30 0 c0 -8 6 -16 15 -29 z" fill="#fff"/>
+  </svg>
+  <h1 id="title">Choose a new password</h1>
+  <p id="intro">Enter a new password for your DRINKS account.</p>
+  <form id="form" hidden style="display:flex;flex-direction:column;gap:14px">
+    <label>New password<input id="pw" type="password" autocomplete="new-password" minlength="8" required></label>
+    <label>Type it again<input id="pw2" type="password" autocomplete="new-password" minlength="8" required></label>
+    <button class="btn" id="save" type="submit">Save new password</button>
+  </form>
+  <p class="msg" id="msg" role="status"></p>
+  <a class="btn" id="open" href="drinksapp://" hidden>Open the DRINKS app</a>
+  <small>Questions? <a href="mailto:help@drinksapp.co.za" style="color:#F5A524">help@drinksapp.co.za</a></small>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  function fail(text) {
+    $('title').textContent = 'This link has expired';
+    $('intro').textContent = text;
+    $('form').hidden = true;
+  }
+  var params = new URLSearchParams((location.hash || '').slice(1) + '&' + (location.search || '').slice(1));
+  if (params.get('error') || params.get('error_code')) {
+    fail('Password reset links only work once and for a limited time. In the DRINKS app, tap "Forgot password" again to get a new link.');
+  } else if (!window.supabase) {
+    $('msg').textContent = 'Something went wrong loading this page. Please refresh.';
+  } else {
+    // The publishable key is public: it only allows what the database rules allow.
+    var client = window.supabase.createClient(
+      'https://xzabnvvbpiwabsmmacgo.supabase.co',
+      'sb_publishable_J3PccTqakid1HnTkP1zvcg_uieIFMfk',
+      { auth: { persistSession: false, detectSessionInUrl: true } }
+    );
+    client.auth.getSession().then(function (r) {
+      if (location.hash) history.replaceState(null, '', location.pathname);
+      if (r.data && r.data.session) { $('form').hidden = false; $('pw').focus(); }
+      else fail('Password reset links only work once and for a limited time. In the DRINKS app, tap "Forgot password" again to get a new link.');
+    });
+    $('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var pw = $('pw').value;
+      $('msg').className = 'msg';
+      if (pw.length < 8) { $('msg').className = 'msg bad'; $('msg').textContent = 'Use at least 8 characters.'; return; }
+      if (pw !== $('pw2').value) { $('msg').className = 'msg bad'; $('msg').textContent = "The two passwords don't match."; return; }
+      $('save').disabled = true;
+      client.auth.updateUser({ password: pw }).then(function (r) {
+        $('save').disabled = false;
+        if (r.error) { $('msg').className = 'msg bad'; $('msg').textContent = r.error.message; return; }
+        $('form').hidden = true;
+        $('title').textContent = 'Password changed ✓';
+        $('intro').textContent = 'Go back to the DRINKS app and sign in with your new password.';
+        $('open').hidden = false;
+        client.auth.signOut();
+      });
+    });
+  }
+</script>
+</body>
+</html>
