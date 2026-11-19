@@ -1,5 +1,14 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Page not found · DRINKS</title><meta http-equiv="refresh" content="3; url=/">
+<title>Page not found · DRINKS</title><script>
+// Pages inside the web app (drinksapp.co.za/order/...) are handled by the app itself.
+if (location.pathname.indexOf('/order/') === 0) {
+  fetch('/order/index.html').then(function (r) { return r.text(); }).then(function (html) {
+    document.open(); document.write(html); document.close();
+  });
+} else {
+  setTimeout(function () { location.replace('/'); }, 3000);
+}
+</script>
 <style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0F1115;color:#F4F5F7;font-family:system-ui,sans-serif;text-align:center;padding:16px}a{color:#F5A524}</style>
 </head><body><p>That page doesn't exist. Taking you to <a href="/">drinksapp.co.za</a>…</p></body></html>
