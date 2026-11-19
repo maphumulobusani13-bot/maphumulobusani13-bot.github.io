@@ -21,6 +21,8 @@
   p { margin: 0; color: var(--muted); font-size: 18px; }
   .cta { display: inline-block; margin-top: 28px; background: var(--amber); color: #1A1204; font-weight: 700;
          font-size: 18px; padding: 16px 28px; border-radius: 12px; text-decoration: none; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 0 12px; }
+  .cta.secondary { background: transparent; color: var(--amber); box-shadow: inset 0 0 0 2px var(--amber); }
   .icon { width: min(280px, 70vw); margin: 0 auto; display: block; }
   .steps { display: grid; gap: 16px; padding-bottom: 56px; }
   @media (min-width: 760px) { .steps { grid-template-columns: repeat(3, 1fr); } }
@@ -49,8 +51,11 @@
   <section class="hero">
     <div>
       <h1>Ice-cold drinks, <span>right at your doorstep.</span></h1>
-      <p>Beer, wine, spirits, soft drinks and ice from a store near you, delivered fast. Order in the app, pay safely by card, and follow your driver to your door.</p>
-      <a class="cta" href="/app/">Get the app</a>
+      <p>Beer, wine, spirits, soft drinks and ice from a store near you, delivered fast. Order online or in the app, pay safely by card, and follow your driver to your door.</p>
+      <div class="ctas">
+        <a class="cta" href="/order/">Order online</a>
+        <a class="cta secondary" href="/app/">Get the app</a>
+      </div>
     </div>
     <svg class="icon" viewBox="0 0 220 220" role="img" aria-label="DRINKS app icon">
       <rect width="220" height="220" rx="50" fill="#F5A524"/>
